@@ -1,6 +1,6 @@
 Chapter 7: Missing Data
 
-Data can be downloaded here
+Data can be downloaded here: http://blogs.baylor.edu/rlatentvariable/sample-page/data/
 
 Exploring missing values
 

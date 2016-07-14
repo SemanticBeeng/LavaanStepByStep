@@ -22,18 +22,19 @@ names(wisc4.sd) <-
     c("Information", "Similarities", "Word.Reasoning", "Matrix.Reasoning", "Picture.Concepts")
 
 # convert correlations and SDs to covarainces
-wisc4.cov <- cor2cov(wisc4.cor,wisc4.sd)
+wisc4.cov <- cor2cov(wisc4.cor, wisc4.sd)
 
 # specify single factor model
 wisc4.model<-'
-    g =~ a*Information + b*Similarities + c*Word.Reasoning + d*Matrix.Reasoning + e*Picture.Concepts'
+    g =~ a*Information + b*Similarities + c*Word.Reasoning + d*Matrix.Reasoning + e*Picture.Concepts
+'
 
 # fit model
 wisc4.fit <- cfa(model=wisc4.model, sample.cov=wisc4.cov, sample.nobs=550,  std.lv=FALSE)
 
 # examine parameter estimates
-summary(wisc4.fit,standardized=TRUE)
-parameterEstimates(wisc4.fit,standardized=TRUE)
+summary(wisc4.fit, standardized=TRUE)
+parameterEstimates(wisc4.fit, standardized=TRUE)
 
 # check model
 # model-implied covariances
@@ -44,7 +45,7 @@ wisc4Fit.cov <- fitted(wisc4.fit)$cov
 wisc4Fit.cor <- cov2cor(wisc4Fit.cov)
 
 # residual correlations
-residuals(wisc4.fit,type="cor")
+residuals(wisc4.fit, type="cor")
 
 # measures of model fit 
 fitMeasures(wisc4.fit)
@@ -56,31 +57,34 @@ modificationIndices(wisc4.fit)
 
 # method 1
 wisc4.model.Std<-'
-g =~ NA*Information + a*Information + b*Similarities + c*Word.Reasoning + 
-d*Matrix.Reasoning + e*Picture.Concepts
-# constrain the LV variance to 1
-g~~1*g
+  g =~ NA*Information + a*Information + b*Similarities + c*Word.Reasoning + 
+        d*Matrix.Reasoning + e*Picture.Concepts
+
+  # constrain the LV variance to 1
+  g ~~ 1*g
 '
 wisc4.fit.Std <- cfa(wisc4.model.Std, sample.cov=wisc4.cov, sample.nobs=550)
+
 # method 2
 wisc4.fit.Std <- cfa(wisc4.model, sample.cov=wisc4.cov, sample.nobs=550, std.lv=TRUE)
 
 ## Effects coding
 
 wisc4.model.effects<-'
-g =~ NA*Information + a*Information + b*Similarities + c*Word.Reasoning +
- d*Matrix.Reasoning + e*Picture.Concepts
-# constrain the loadings to sum to one
-a + b + c + d + e == 5
+  g =~ NA*Information + a*Information + b*Similarities + c*Word.Reasoning +
+    d*Matrix.Reasoning + e*Picture.Concepts
+
+  # constrain the loadings to sum to one
+  a + b + c + d + e == 5
 '
 wisc4.fit.effects <- cfa(wisc4.model.effects, sample.cov=wisc4.cor, sample.nobs=550)
 
 ## Example: Two-factor model of WISC-IV data
 
 wisc4.model2<-'
-V =~ a*Information + b*Similarities + c*Word.Reasoning 
-F =~ d*Matrix.Reasoning + e*Picture.Concepts
-V~~f*F
+  V =~ a*Information + b*Similarities + c*Word.Reasoning 
+  F =~ d*Matrix.Reasoning + e*Picture.Concepts
+  V ~~ f*F
 '
 wisc4.fit2 <- cfa(wisc4.model2, sample.cov=wisc4.cov, sample.nobs=550)
 
@@ -93,11 +97,12 @@ wisc4.structure2 <- wisc4.est2$lambda %*% wisc4.est2$psi
 ## Example: Structural equation model
 
 wisc4SEM.model <- '
-# define latent variables
-V =~ a*Information + b*Similarities + c*Word.Reasoning 
-F =~ d*Matrix.Reasoning + e*Picture.Concepts
-# define structural relations
-V~k*F
+  # define latent variables
+  V =~ a*Information + b*Similarities + c*Word.Reasoning 
+  F =~ d*Matrix.Reasoning + e*Picture.Concepts
+
+  # define structural relations
+  V ~ k*F
 '
 wisc4SEM.fit <- cfa(wisc4SEM.model, sample.cov=wisc4.cov, sample.nobs=550)
 
